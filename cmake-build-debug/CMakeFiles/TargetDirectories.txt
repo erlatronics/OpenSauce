@@ -1,0 +1,3 @@
+C:/Users/erlan/CLionProjects/OpenSauce/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/erlan/CLionProjects/OpenSauce/cmake-build-debug/CMakeFiles/CookingAssistant.dir
+C:/Users/erlan/CLionProjects/OpenSauce/cmake-build-debug/CMakeFiles/edit_cache.dir
