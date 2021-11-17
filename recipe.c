@@ -12,7 +12,6 @@ Recipe createRecipe(char* name){
     newRecipe.name[RECIPE_NAME_MAX_CHARACTERS-1] = '\0';
     newRecipe.ingredients = NULL;
     newRecipe.description = NULL;
-    newRecipe.descriptionLength = 0;
     return newRecipe;
 }
 
@@ -23,11 +22,10 @@ void setRecipeDescription(Recipe* rec, char* desc){
     }
     rec->description = calloc(descLength + 1,sizeof(char));
     strcpy(rec->description,desc);
-    rec->descriptionLength = descLength;
 
 }
 
-void addIngredientRecipe(Recipe* rec, Ingredient ing){
+void addItemRecipe(Recipe* rec, Item item){
     //Find end of ingredient list
     ListItem* curListElement = rec->ingredients;
     ListItem *newIngredient = malloc(sizeof(ListItem));
@@ -49,10 +47,10 @@ void addIngredientRecipe(Recipe* rec, Ingredient ing){
         newIngredient->prevIngredient = NULL;
         newIngredient->nextIngredient = NULL;
     }
-    newIngredient->ingredient = ing;
+    newIngredient->ingredient = item;
 }
 
-void removeIngredientRecipe(Recipe* rec, ListItem* item){
+void removeItemRecipe(Recipe* rec, ListItem* item){
     if(item != NULL){
         if(item->prevIngredient == NULL) {
             if(item->nextIngredient != NULL){

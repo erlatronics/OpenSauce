@@ -9,24 +9,23 @@
 
 #include "ingredient.h"
 
-typedef struct ingredientListElement{
-    Ingredient ingredient;
-    struct ingredientListElement* nextIngredient;
-    struct ingredientListElement* prevIngredient;
+typedef struct ListItem{
+    Item ingredient;
+    struct ListItem* nextIngredient;
+    struct ListItem* prevIngredient;
 }ListItem;
 
-typedef struct recipe{
+typedef struct {
     char name[RECIPE_NAME_MAX_CHARACTERS];
     char* description;
-    int descriptionLength;
     ListItem * ingredients;
 }Recipe;
 
 
 Recipe createRecipe(char* name);
 void setRecipeDescription(Recipe* rec, char* desc);
-void addIngredientRecipe(Recipe* rec, Ingredient ing);
-void removeIngredientRecipe(Recipe* rec, ListItem* item);
+void addItemRecipe(Recipe* rec, Item ing);
+void removeItemRecipe(Recipe* rec, ListItem* item);
 
 
 #endif //OPENSAUCE_RECIPE_H

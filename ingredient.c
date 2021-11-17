@@ -4,18 +4,26 @@
 #include "ingredient.h"
 #include "string.h"
 #include "stdio.h"
-//Create ingredient
-Ingredient createIngredient(char* name, float amount, Unit unit){
+#include "stdlib.h"
 
+//Create ingredient
+Item createItem(int id, float amount, Unit unit){
+    Item item;
+    item.id = id;
+    item.amount = amount;
+    item.unit = unit;
+    return item;
+}
+void addIngredient(IngredientList* list, char* name, Unit unit){
     Ingredient ingredient;
     strcpy(ingredient.name,name);
     ingredient.name[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
-    ingredient.amount = amount;
     ingredient.unit = unit;
-    return ingredient;
+    //TODO add id functionality
+    ingredient.id = 0;
 }
 //Change the unit of the ingredient and convert the value simultaneously
-void changeIngredientUnit(Ingredient* i, Unit desiredUnit){
+void changeItemUnit(Item* i, Unit desiredUnit){
     float newAmount = convertUnit(i->amount,i->unit,desiredUnit);
     if(newAmount != -1){
         i->amount = newAmount;
@@ -25,3 +33,22 @@ void changeIngredientUnit(Ingredient* i, Unit desiredUnit){
     }
 
 }
+
+IngredientList loadIngredients(char* fileName){
+    FILE* file = fopen(fileName,"r");
+    IngredientList list;
+    fread(&list.numIngredients,sizeof(int),1,file);
+    list.ingredients = calloc(list.numIngredients,sizeof(Ingredient));
+    fread(list.ingredients,sizeof(Ingredient),list.numIngredients,file);
+    fclose(file);
+    return list;
+}
+
+int saveIngredients(char* fileName, IngredientList list){
+    FILE* file = fopen(fileName,"w");
+    fwrite(&list.numIngredients,sizeof(int),1,file);
+    fwrite(list.ingredients,sizeof(Ingredient), list.numIngredients,file);
+    fclose(file);
+    return 1;
+}
+

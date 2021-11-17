@@ -3,17 +3,19 @@
 #include "recipe.h"
 int main() {
     printf("--OpenSauce--\n");
-    Ingredient i = createIngredient("Yoghurt",2,deciliter);
-    Ingredient j = createIngredient("Corn",300,gram);
+    IngredientList inList;
+    Ingredient ins[2];
+    ins[0].id = 1;
+    ins[0].unit = gram;
+    ins[1].id = 2;
+    ins[1].unit = tablespoon;
 
-    Recipe rec = createRecipe("Yoghurt Corn");
-    addIngredientRecipe(&rec,i);
-    addIngredientRecipe(&rec,j);
-    setRecipeDescription(&rec,"Start by adding the corn to the yoghurt.\nThen put in bowl and enjoy!");
+    inList.ingredients = ins;
+    inList.numIngredients = 2;
 
-    printf("*%s*\n",rec.name);
-    printf("%s\n",rec.description);
-    printf("%s %f deciliter\n",rec.ingredients->ingredient.name,rec.ingredients->ingredient.amount);
-    printf("%s %f gram",rec.ingredients->nextIngredient->ingredient.name,rec.ingredients->nextIngredient->ingredient.amount);
+    saveIngredients("ingredients.sauce",inList);
+
+    IngredientList list = loadIngredients("ingredients.sauce");
+    printf("%d and %d", list.ingredients[0].unit,list.ingredients[1].unit);
     return 0;
 }
