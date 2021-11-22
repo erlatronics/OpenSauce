@@ -2,13 +2,12 @@
 // Created by erlan on 2021-11-09.
 //
 #include "unit.h"
-
+#include "string.h"
 enum unitType{volume, weight};
 
 //Convert the volume from one volume Unit to another
 float convertUnit(float value , Unit currentUnit, Unit desiredUnit){
     unsigned short unitTypeChosen;
-
 
     switch (currentUnit) {
         //Convert value of the current Unit to liters
@@ -58,6 +57,10 @@ float convertUnit(float value , Unit currentUnit, Unit desiredUnit){
         case pounds:
             value = value * 453.59237f;
             unitTypeChosen = weight;
+            break;
+            //Don't convert pieces
+        case pieces:
+            unitTypeChosen = pieces;
             break;
         default:
             //Could not do conversion due to not having case for chosen Unit
@@ -114,6 +117,20 @@ float convertUnit(float value , Unit currentUnit, Unit desiredUnit){
                 //Could not do conversion due to not having case for desired Unit
                 return -1;
         }
+    }else if(desiredUnit == pieces){
         return value;
     }
+
+    //Could not do conversion due to not having case for desired Unit
+    return -1;
+}
+
+Unit getUnitFromName(char* name){
+    for(int i = 0; i < NUM_UNITS; i++){
+        char* pt = strstr(name,unitNames[i]);
+        if(pt != NULL){
+            return i;
+        }
+    }
+    return -1;
 }

@@ -4,9 +4,9 @@
 
 #ifndef OPENSAUCE_UNIT_H
 #define OPENSAUCE_UNIT_H
-
-typedef enum {liter, deciliter, centiliter, milliliter, tablespoon, teaspoon, cup, gram, hectogram, kilogram, ounce, pounds} Unit;
-
+#define NUM_UNITS 13
+typedef enum {deciliter, centiliter, milliliter, liter, tablespoon, teaspoon, cup, hectogram, kilogram, gram, ounce, pounds, pieces} Unit;
+static const char *unitNames[NUM_UNITS] = {"dl","cl","ml","l","msk","tsk","cup","hg","kg","g","oz","lbs","st"};
 float convertUnit(float value , Unit currentUnit, Unit desiredUnit);
-
+Unit getUnitFromName(char* name);
 #endif //OPENSAUCE_UNIT_H

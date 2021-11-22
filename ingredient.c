@@ -5,8 +5,9 @@
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "strproperty.h"
 
-//Create ingredient
+//Create item
 Item createItem(int id, float amount, Unit unit){
     Item item;
     item.id = id;
@@ -14,15 +15,26 @@ Item createItem(int id, float amount, Unit unit){
     item.unit = unit;
     return item;
 }
-void addIngredient(IngredientList* list, char* name, Unit unit){
+
+Ingredient createIngredient(int id, char* name, Unit unit){
+    Ingredient ing;
+    ing.id = id;
+    //snprintf(ing.name,INGREDIENT_NAME_MAX_CHARACTERS,"%s",name);
+    strncpy(ing.name, name,INGREDIENT_NAME_MAX_CHARACTERS);
+    ing.name[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
+    ing.unit = unit;
+    return ing;
+}
+
+void addIngredient(IngredientList* list, int id, char* name, Unit unit){
     Ingredient ingredient;
     strcpy(ingredient.name,name);
     ingredient.name[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
     ingredient.unit = unit;
     //TODO add id functionality
-    ingredient.id = 0;
+    ingredient.id = id;
 }
-//Change the unit of the ingredient and convert the value simultaneously
+//Change the unit of the item and convert the value simultaneously
 void changeItemUnit(Item* i, Unit desiredUnit){
     float newAmount = convertUnit(i->amount,i->unit,desiredUnit);
     if(newAmount != -1){
@@ -33,22 +45,66 @@ void changeItemUnit(Item* i, Unit desiredUnit){
     }
 
 }
-
 IngredientList loadIngredients(char* fileName){
-    FILE* file = fopen(fileName,"r");
     IngredientList list;
-    fread(&list.numIngredients,sizeof(int),1,file);
-    list.ingredients = calloc(list.numIngredients,sizeof(Ingredient));
-    fread(list.ingredients,sizeof(Ingredient),list.numIngredients,file);
-    fclose(file);
+    list.numIngredients = 0;
+    FILE* file = fopen(fileName,"r");
+    if(file == NULL){
+        printf_s("Not a file");
+        return list;
+    }
+    char lineBuffer[MAX_LINE_LENGTH];
+    char* line;
+    while ((line = fgets(lineBuffer,MAX_LINE_LENGTH,file)) != NULL) {
+        int id = getIntProperty(line,"id:");
+        if(id == 0){
+            printf_s("ID doesn't exist");
+        }
+        char* name = getStringProperty(line,"name:");
+        if(strlen(name) <2){
+            printf_s("Name doesn't exist");
+        }
+        char* unitString = getStringProperty(line,"unit:");
+        Unit unit = getUnitFromName(unitString);
+        if(unit == -1){
+            printf("Unit doesn't exist");
+        }
+
+        Ingredient ing = createIngredient(id,name,unit);
+        if(list.numIngredients == 0){
+            list.ingredients = malloc(sizeof(Ingredient));
+        } else{
+            Ingredient* tempPtr = realloc(list.ingredients,sizeof(Ingredient) * (list.numIngredients+1));
+            if(tempPtr == NULL){
+                printf_s("\nCrap! Memory got away...\n");
+            }else{
+                list.ingredients = tempPtr;
+            }
+        }
+        list.ingredients[list.numIngredients] = ing;
+        list.numIngredients++;
+    }
     return list;
 }
 
 int saveIngredients(char* fileName, IngredientList list){
     FILE* file = fopen(fileName,"w");
-    fwrite(&list.numIngredients,sizeof(int),1,file);
-    fwrite(list.ingredients,sizeof(Ingredient), list.numIngredients,file);
+    for(int i = 0; i < list.numIngredients; i++){
+        fprintf(file,"id: %d; name: \"%s\"; unit: \"%s\"\n",list.ingredients[i].id,list.ingredients[i].name,unitNames[list.ingredients[i].unit]);
+    }
     fclose(file);
     return 1;
 }
 
+Ingredient getIngredientByID(IngredientList list, int id){
+    for(int i = 0; i < list.numIngredients; i++) {
+        if (list.ingredients[i].id == id) {
+            return list.ingredients[i];
+        }
+    }
+    Ingredient ing;
+    strcpy(ing.name,"NO INGREDIENT");
+    ing.id = 0;
+    ing.unit = 0;
+    return ing;
+}

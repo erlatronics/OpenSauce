@@ -89,6 +89,12 @@
 		<Unit filename="C:/Users/erlan/CLionProjects/OpenSauce/recipe.h">
 			<Option target="CookingAssistant"/>
 		</Unit>
+		<Unit filename="C:/Users/erlan/CLionProjects/OpenSauce/strproperty.c">
+			<Option target="CookingAssistant"/>
+		</Unit>
+		<Unit filename="C:/Users/erlan/CLionProjects/OpenSauce/strproperty.h">
+			<Option target="CookingAssistant"/>
+		</Unit>
 		<Unit filename="C:/Users/erlan/CLionProjects/OpenSauce/unit.c">
 			<Option target="CookingAssistant"/>
 		</Unit>
