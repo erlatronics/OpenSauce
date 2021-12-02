@@ -28,7 +28,7 @@ typedef struct {
 }IngredientList;
 
 Item createItem(int id, float amount, Unit unit);
-void addIngredient(IngredientList* list, int id, char* name, Unit unit);
+void addIngredient(IngredientList* list, char* name, Unit unit);
 void changeItemUnit(Item* i, Unit desiredUnit);
 
 IngredientList loadIngredients(char* fileName);

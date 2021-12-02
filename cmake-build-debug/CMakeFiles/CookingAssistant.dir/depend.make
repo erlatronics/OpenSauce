@@ -10,6 +10,7 @@ CMakeFiles/CookingAssistant.dir/main.c.obj: \
  ../ingredient.h \
  ../main.c \
  ../recipe.h \
+ ../strproperty.h \
  ../unit.h
 CMakeFiles/CookingAssistant.dir/recipe.c.obj: \
  ../ingredient.h \

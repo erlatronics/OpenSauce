@@ -4,9 +4,11 @@
 #include <locale.h>
 #include <windows.h>
 #include <dirent.h>
+#include "strproperty.h"
 #define printHeader() printf_s("--OpenSauce--\n\n");
 void showRecipes(Recipe* recipes);
 Recipe* importRecipes();
+void createNewIngredient(IngredientList* list);
 IngredientList list;
 Recipe* recipes;
 int numOfRecipes = 0;
@@ -15,9 +17,16 @@ int main() {
     setlocale(LC_ALL, "swedish");
     int running = 1;
     list = loadIngredients("ingredients.txt");
+    char** ingredientNames = calloc(sizeof(char*),list.numIngredients);
+    for(int i = 0; i < list.numIngredients; i++){
+        ingredientNames[i] = (char*)list.ingredients[i].name;
+    }
+    char* text = autoComplete("--OpenSauce--\n\nNamn pa ingrediens:",ingredientNames,list.numIngredients);
+
     Recipe* r =  importRecipes();
     while (running){
         system("cls");
+        printf_s("%s",text);
         printf_s("--OpenSauce--\n\n");
         printf_s("1) Visa Recept\n");
         printf_s("2) Skapa Recept\n");
@@ -38,9 +47,7 @@ int main() {
                 scanf("%d",&answer);
                 break;
             case 3:
-                system("cls");
-                printf_s("Lagger till ingrediens");
-                scanf("%d",&answer);
+                createNewIngredient(&list);
                 break;
             case 4:
                 system("cls");
@@ -110,5 +117,49 @@ Recipe* importRecipes(){
 
     closedir(folder);
     return recipes;
+}
+void createNewIngredient(IngredientList* list){
+    int running = 1;
+    while(running){
+        system("cls");
+        printf_s("--Add Ingredient--\nName:");
+        char answer[INGREDIENT_NAME_MAX_CHARACTERS];
+        do{
+            scanf("%s",&answer);
+            answer[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
+        }while(strlen(answer) < 1);
+        system("cls");
+        printf_s("--Add Ingredient--\nStandard Unit:");
+        char unitName[INGREDIENT_NAME_MAX_CHARACTERS];
+        do{
+            scanf("%s",&unitName);
+            answer[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
+            system("cls");
+            printf_s("\nForsok igen\n");
+        }while(getUnitFromName(unitName) == -1);
+        system("cls");
+        printf_s("Fint");
+
+        Unit unit = getUnitFromName(unitName);
+
+        addIngredient(list,answer,unit);
+        int save = saveIngredients("ingredients.txt",*list);
+        system("cls");
+        printf_s("%s, %s\n",answer,unitNames[unit]);
+        if(!save){
+            printf_s("\nFailed to save Ingredient\n0)Create another ingredient\n1)Go back");
+        }
+        else{
+            printf_s("Successfully created Ingredient\n0)Create another ingredient\n1)Go back");
+        }
+        int quit;
+        scanf("%d",&quit);
+        if(quit){
+            running = 0;
+        }
+    }
+}
+void createNewRecipe(IngredientList list){
+
 }
 

@@ -5,6 +5,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <windows.h>
+#include <conio.h>
+
+int strContains(char* string, char* substring);
+
 float getFloatProperty(char* string, char* property){
     char stringCopy[MAX_LINE_LENGTH];
     strcpy(stringCopy, string);
@@ -74,4 +79,75 @@ int getIntProperty(char* string, char* property){
     }
     printf_s("\nNot able to read int property \"%s\" since string is empty",property,stringCopy);
     return -1;
+}
+char* autoComplete(char* prompt, char** suggestions, int numSuggestions){
+    char input;
+    int length = 0;
+    int selection = 0;
+    int suggested = 0;
+    system("cls");
+    printf_s("%s\r\n>>>",prompt);
+    char* text = malloc(sizeof(char)* 100);
+    while((input = (char)getch()) != '\r'){
+        system("cls");
+        if(input == '\b'){
+            if(length > 0){
+                text[length-1] = '\0';
+                length--;
+            }
+            printf_s("%s\r\n%s%s\n", prompt,selection == 0 ? ">>>" : "", text);
+        }
+        else if(input == '\t'){
+            if(selection == suggested){
+                selection = 0;
+            } else {
+                selection++;
+            }
+            printf_s("%s\r\n%s%s\n", prompt,selection == 0 ? ">>>" : "", text);
+        }
+        else {
+            selection = 0;
+            text[length] = input;
+            text[length + 1] = '\0';
+            length++;
+            printf_s("%s\r\n>>>%s\n", prompt, text);
+        }
+        if(length > 2){
+            suggested = 0;
+            for(int i = 0; i < numSuggestions; i++){
+                if(strContains(suggestions[i],text)){
+                    suggested++;
+                    printf_s("%s*%s*\n",selection == suggested ? ">>>" : "",suggestions[i]);
+                }
+            }
+        }
+    }
+    if(selection == 0){
+        return text;
+    }
+    else{
+        int sel = 0;
+        for(int i = 0; i < numSuggestions; i++){
+            if(strContains(suggestions[i],text)){
+                sel++;
+                if(sel == selection){
+                    return suggestions[i];
+                }
+            }
+        }
+    }
+}
+int strContains(char* string, char* substring){
+    int stringLength = (int)strlen(string);
+    int subLength = (int)strlen(substring);
+    char* lowerString = malloc(stringLength);
+    char* lowerSubString = malloc(subLength);
+    for(int i = 0; i < stringLength; i++){
+        lowerString[i] = (char)tolower(string[i]);
+    }
+    for(int i = 0; i < subLength; i++){
+        lowerSubString[i] = (char)tolower(substring[i]);
+    }
+    return (strstr(lowerString,lowerSubString)) != NULL;
+
 }

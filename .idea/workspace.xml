@@ -12,38 +12,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd250273-6cd0-41b4-b316-a85678875636" name="Default Changelist" comment="Added recipe functionality with a linked list ingredient list.">
-      <change afterPath="$PROJECT_DIR$/strproperty.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/strproperty.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/cmake_clean.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/link.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/objects1.rsp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/objects1.rsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CookingAssistant.dir/progress.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CookingAssistant.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CookingAssistant.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CookingAssistant.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CookingAssistant.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ingredient.c" beforeDir="false" afterPath="$PROJECT_DIR$/ingredient.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ingredient.h" beforeDir="false" afterPath="$PROJECT_DIR$/ingredient.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipe.c" beforeDir="false" afterPath="$PROJECT_DIR$/recipe.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipe.h" beforeDir="false" afterPath="$PROJECT_DIR$/recipe.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unit.c" beforeDir="false" afterPath="$PROJECT_DIR$/unit.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unit.h" beforeDir="false" afterPath="$PROJECT_DIR$/unit.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strproperty.c" beforeDir="false" afterPath="$PROJECT_DIR$/strproperty.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strproperty.h" beforeDir="false" afterPath="$PROJECT_DIR$/strproperty.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,6 +107,8 @@
       <workItem from="1637525307801" duration="228000" />
       <workItem from="1637528238802" duration="5979000" />
       <workItem from="1637605801918" duration="9725000" />
+      <workItem from="1638128332842" duration="892000" />
+      <workItem from="1638472872389" duration="13491000" />
     </task>
     <task id="LOCAL−00001" summary="Added recipe functionality with a linked list ingredient list.">
       <created>1636582580337</created>
@@ -162,5 +140,12 @@
     </ignored-roots>
     <MESSAGE value="Added recipe functionality with a linked list ingredient list." />
     <option name="LAST_COMMIT_MESSAGE" value="Added recipe functionality with a linked list ingredient list." />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="CMakeRunConfiguration">
+        <watch expression="list" language="ObjectiveC" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

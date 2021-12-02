@@ -26,13 +26,20 @@ Ingredient createIngredient(int id, char* name, Unit unit){
     return ing;
 }
 
-void addIngredient(IngredientList* list, int id, char* name, Unit unit){
+void addIngredient(IngredientList* list, char* name, Unit unit){
     Ingredient ingredient;
     strcpy(ingredient.name,name);
     ingredient.name[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
     ingredient.unit = unit;
-    //TODO add id functionality
-    ingredient.id = id;
+    int nextAvailableIndex = 0;
+    for(int i = 0; i < list->numIngredients;i++){
+        if(nextAvailableIndex <= list->ingredients[i].id){
+            nextAvailableIndex = list->ingredients[i].id + 1;
+        }
+    }
+    ingredient.id = nextAvailableIndex;
+    list->ingredients[list->numIngredients] = ingredient;
+    list->numIngredients++;
 }
 //Change the unit of the item and convert the value simultaneously
 void changeItemUnit(Item* i, Unit desiredUnit){
@@ -84,13 +91,21 @@ IngredientList loadIngredients(char* fileName){
         list.ingredients[list.numIngredients] = ing;
         list.numIngredients++;
     }
+    fclose(file);
     return list;
 }
 
 int saveIngredients(char* fileName, IngredientList list){
     FILE* file = fopen(fileName,"w");
+    if(file == NULL){
+        return 0;
+    }
     for(int i = 0; i < list.numIngredients; i++){
-        fprintf(file,"id: %d; name: \"%s\"; unit: \"%s\"\n",list.ingredients[i].id,list.ingredients[i].name,unitNames[list.ingredients[i].unit]);
+        int print = fprintf(file,"id: %d; name: \"%s\"; unit: \"%s\"\n",list.ingredients[i].id,list.ingredients[i].name,unitNames[list.ingredients[i].unit]);
+        if(print == 0){
+            fclose(file);
+            return 0;
+        }
     }
     fclose(file);
     return 1;
