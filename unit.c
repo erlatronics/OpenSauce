@@ -126,10 +126,14 @@ float convertUnit(float value , Unit currentUnit, Unit desiredUnit){
 }
 
 Unit getUnitFromName(char* name){
-    for(int i = 0; i < NUM_UNITS; i++){
-        char* pt = strstr(name,unitNames[i]);
-        if(pt != NULL){
-            return i;
+    if(name != NULL){
+        for(int i = 0; i < NUM_UNITS; i++){
+            char* pt = strstr(name,unitNames[i]);
+            if(pt != NULL){
+                if(strlen(name) == strlen(unitNames[i])){
+                    return i;
+                }
+            }
         }
     }
     return -1;

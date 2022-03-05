@@ -9,6 +9,6 @@
 float getFloatProperty(char* string, char* property);
 char* getStringProperty(char* string, char* property);
 int getIntProperty(char* string, char* property);
-char* autoComplete(char* prompt, char** suggestions, int numSuggestions);
-
+char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* chosen);
+char* getStrInput(char* prompt, int minChars, int maxChars);
 #endif //COOKINGASSISTANT_STRPROPERTY_H

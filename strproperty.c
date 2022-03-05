@@ -80,7 +80,7 @@ int getIntProperty(char* string, char* property){
     printf_s("\nNot able to read int property \"%s\" since string is empty",property,stringCopy);
     return -1;
 }
-char* autoComplete(char* prompt, char** suggestions, int numSuggestions){
+char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* chosen){
     char input;
     int length = 0;
     int selection = 0;
@@ -123,7 +123,13 @@ char* autoComplete(char* prompt, char** suggestions, int numSuggestions){
         }
     }
     if(selection == 0){
-        return text;
+        if(chosen != NULL){
+            *chosen = -1;
+        }
+        char* returnedText = calloc(strlen(text)+1,sizeof(char));
+        strcpy(returnedText,text);
+        free(text);
+        return returnedText;
     }
     else{
         int sel = 0;
@@ -131,6 +137,10 @@ char* autoComplete(char* prompt, char** suggestions, int numSuggestions){
             if(strContains(suggestions[i],text)){
                 sel++;
                 if(sel == selection){
+                    if(chosen != NULL){
+                        *chosen = i;
+                    }
+                    free(text);
                     return suggestions[i];
                 }
             }
@@ -149,5 +159,21 @@ int strContains(char* string, char* substring){
         lowerSubString[i] = (char)tolower(substring[i]);
     }
     return (strstr(lowerString,lowerSubString)) != NULL;
-
+}
+char* getStrInput(char* prompt, int minChars, int maxChars){
+    system("cls");
+    fflush(stdin);
+    printf_s("%s\r\n",prompt);
+    char answer[maxChars+3];
+    fgets(answer,maxChars+3,stdin);
+    while (strlen(answer) <= minChars || strlen(answer) > maxChars+1){
+        system("cls");
+        printf_s("%s\n%s",prompt, strlen(answer) < maxChars ? "String too short\r\n" : "String too long\r\n");
+        fflush(stdin);
+        fgets(answer,maxChars+3,stdin);
+    }
+    char* returnAnswer = malloc(strlen(answer));
+    strcpy(returnAnswer,answer);
+    returnAnswer[strlen(answer)-1] = '\0';
+    return returnAnswer;
 }

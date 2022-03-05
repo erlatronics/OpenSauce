@@ -12,14 +12,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd250273-6cd0-41b4-b316-a85678875636" name="Default Changelist" comment="Added recipe functionality with a linked list ingredient list.">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CookingAssistant.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CookingAssistant.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingredient.c" beforeDir="false" afterPath="$PROJECT_DIR$/ingredient.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingredient.h" beforeDir="false" afterPath="$PROJECT_DIR$/ingredient.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/strproperty.c" beforeDir="false" afterPath="$PROJECT_DIR$/strproperty.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/strproperty.h" beforeDir="false" afterPath="$PROJECT_DIR$/strproperty.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit.c" beforeDir="false" afterPath="$PROJECT_DIR$/unit.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit.h" beforeDir="false" afterPath="$PROJECT_DIR$/unit.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +74,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="CookingAssistant" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CookingAssistant" TARGET_NAME="CookingAssistant" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CookingAssistant" RUN_TARGET_NAME="CookingAssistant">
+    <configuration name="CookingAssistant" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CookingAssistant" TARGET_NAME="CookingAssistant" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CookingAssistant" RUN_TARGET_NAME="CookingAssistant">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -109,6 +110,8 @@
       <workItem from="1637605801918" duration="9725000" />
       <workItem from="1638128332842" duration="892000" />
       <workItem from="1638472872389" duration="13491000" />
+      <workItem from="1638733112526" duration="8707000" />
+      <workItem from="1646486449317" duration="12450000" />
     </task>
     <task id="LOCAL−00001" summary="Added recipe functionality with a linked list ingredient list.">
       <created>1636582580337</created>

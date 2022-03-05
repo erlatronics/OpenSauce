@@ -5,10 +5,13 @@
 #include <windows.h>
 #include <dirent.h>
 #include "strproperty.h"
+#include <conio.h>
 #define printHeader() printf_s("--OpenSauce--\n\n");
 void showRecipes(Recipe* recipes);
 Recipe* importRecipes();
 void createNewIngredient(IngredientList* list);
+void createNewRecipe(IngredientList* list);
+
 IngredientList list;
 Recipe* recipes;
 int numOfRecipes = 0;
@@ -17,16 +20,13 @@ int main() {
     setlocale(LC_ALL, "swedish");
     int running = 1;
     list = loadIngredients("ingredients.txt");
-    char** ingredientNames = calloc(sizeof(char*),list.numIngredients);
-    for(int i = 0; i < list.numIngredients; i++){
-        ingredientNames[i] = (char*)list.ingredients[i].name;
-    }
-    char* text = autoComplete("--OpenSauce--\n\nNamn pa ingrediens:",ingredientNames,list.numIngredients);
 
+    //char* text = getStrInput("Enter Name of file",3,10);
+    //char* text = autoComplete("--OpenSauce--\n\nNamn pa ingrediens:",ingredientNames,list.numIngredients,&choice);
+    //free(ingredientNames);
     Recipe* r =  importRecipes();
     while (running){
         system("cls");
-        printf_s("%s",text);
         printf_s("--OpenSauce--\n\n");
         printf_s("1) Visa Recept\n");
         printf_s("2) Skapa Recept\n");
@@ -43,8 +43,8 @@ int main() {
                 break;
             case 2:
                 system("cls");
-                printf_s("Skapar Recept");
-                scanf("%d",&answer);
+                createNewRecipe(&list);
+                r = importRecipes();
                 break;
             case 3:
                 createNewIngredient(&list);
@@ -121,45 +121,152 @@ Recipe* importRecipes(){
 void createNewIngredient(IngredientList* list){
     int running = 1;
     while(running){
-        system("cls");
-        printf_s("--Add Ingredient--\nName:");
-        char answer[INGREDIENT_NAME_MAX_CHARACTERS];
-        do{
-            scanf("%s",&answer);
-            answer[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
-        }while(strlen(answer) < 1);
-        system("cls");
-        printf_s("--Add Ingredient--\nStandard Unit:");
-        char unitName[INGREDIENT_NAME_MAX_CHARACTERS];
-        do{
-            scanf("%s",&unitName);
-            answer[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
-            system("cls");
-            printf_s("\nForsok igen\n");
-        }while(getUnitFromName(unitName) == -1);
-        system("cls");
-        printf_s("Fint");
+        char* ingName =getStrInput("--Add Ingredient--\nName:",2,INGREDIENT_NAME_MAX_CHARACTERS);
 
-        Unit unit = getUnitFromName(unitName);
+        char* ingUnit =getStrInput("--Add Ingredient--\nStandard Unit:",1,10);
 
-        addIngredient(list,answer,unit);
+        while(getUnitFromName(ingUnit) == -1){
+            ingUnit =getStrInput("--Add Ingredient--\nPlease Enter a valid unit\nStandard Unit:\n",1,10);
+        }
+
+        Unit unit = getUnitFromName(ingUnit);
+
+        addIngredient(list,ingName,unit);
         int save = saveIngredients("ingredients.txt",*list);
         system("cls");
-        printf_s("%s, %s\n",answer,unitNames[unit]);
+        printf_s("%s, %s\n",ingName,unitNames[unit]);
         if(!save){
-            printf_s("\nFailed to save Ingredient\n0)Create another ingredient\n1)Go back");
+            printf_s("\nFailed to save Ingredient\n1)Create another ingredient\n0)Go back");
         }
         else{
-            printf_s("Successfully created Ingredient\n0)Create another ingredient\n1)Go back");
+            printf_s("Successfully created Ingredient\n1)Create another ingredient\n0)Go back");
         }
         int quit;
         scanf("%d",&quit);
-        if(quit){
+        if(quit == 0){
             running = 0;
         }
     }
 }
-void createNewRecipe(IngredientList list){
+void createNewRecipe(IngredientList* list){
+    char* name = getStrInput("---OpenSauce---\n---Recipe Maker---\n\nNamn pa nytt recept\n",3,RECIPE_NAME_MAX_CHARACTERS);
+    char* fileName = getStrInput("---OpenSauce---\n---Recipe Maker---\n\nFilnamn for recept\n",3,30);
+    char* fileNameWithEnding = malloc(strlen(fileName)+16);
+    strcpy(fileNameWithEnding,"recipes/");
+    strcat(fileNameWithEnding,fileName);
+    strcat(fileNameWithEnding,".recipe");
+    while(fopen(fileNameWithEnding,"r") != NULL){
+        free(fileNameWithEnding);
+        fileName = getStrInput("---OpenSauce---\n---Recipe Maker---\nFilnamn finns redan, skriv nytt\n",3,30);
+        fileNameWithEnding = malloc(strlen(fileName)+16);
+        strcpy(fileNameWithEnding,"recipes/");
+        strcat(fileNameWithEnding,fileName);
+        strcat(fileNameWithEnding,".recipe");
+    }
+    FILE* file = fopen(fileNameWithEnding,"w");
+    fclose(file);
+    int finish = 0;
+    if(file != NULL){
+        Recipe rec = createRecipe(name);
+        setRecipeDescription(&rec,"None\n");
+        char** ingredientNames = calloc(sizeof(char*),(*list).numIngredients);
+        for(int i = 0; i < (*list).numIngredients; i++){
+            ingredientNames[i] = (char*)(*list).ingredients[i].name;
+        }
+        int answer;
+        int chosen;
+        while(!finish){
+            system("cls");
+            printRecipe(rec,(*list));
+            printf_s("1)Add Ingredient\n");
+            printf_s("2)Remove Ingredient\n");
+            printf_s("3)Edit Description\n");
+            printf_s("0)Save and Quit\n");
+            scanf("%d",&answer);
+            switch (answer) {
+                case 1:
+                    autoComplete("Lagg till Ingrediens:\n",ingredientNames,(*list).numIngredients,&chosen);
 
+                    if(chosen == -1){
+                        createNewIngredient(list);
+                        free(ingredientNames);
+                        ingredientNames = calloc(sizeof(char*),(*list).numIngredients);
+                        for(int i = 0; i < (*list).numIngredients; i++){
+                            ingredientNames[i] = (char*)(*list).ingredients[i].name;
+                        }
+                        autoComplete("Ny ingrediens skapad\nLagg till Ingrediens:\n",ingredientNames,(*list).numIngredients,&chosen);
+                    }
+                    char* amountAnswer = getStrInput("Hur mycket? (mangd enhet)",3, 100);
+                    char* amountStr = strtok(amountAnswer," ");
+                    char* unitStr = strtok(NULL," ");
+                    Unit unit = getUnitFromName(unitStr);
+                    int amount = 0;
+                    if(amountStr != NULL && unitStr != NULL){
+                        amount = (int)(strtold(amountStr,&unitStr));
+                    }
+                    while (amount <= 0 || unit == -1){
+                        amountAnswer = getStrInput("Ej korrekt ifyllt\nHur mycket? (mangd enhet)",4, 100);
+                        amountStr = strtok(amountAnswer," ");
+                        unitStr = strtok(NULL," ");
+                        unit = getUnitFromName(unitStr);
+                        if(amountStr != NULL && unitStr != NULL){
+                            amount = (int)(strtold(amountStr,&unitStr));
+                        }
+                    }
+                    Item item;
+                    item.unit = unit;
+                    item.amount = (float)strtold(amountStr,&unitStr);
+                    item.id = list->ingredients[chosen].id;
+                    addItemRecipe(&rec,item);
+                    break;
+                case 2:
+                    system("cls");
+                    printf("Ta bort ingrediens\n");
+                    ListItem* it = rec.items;
+                    int count = 0;
+                    while (it != NULL)
+                    {
+                        count++;
+                        it = it->nextItem;
+                    }
+                    int sel = 0;
+                    char input;
+                    it = rec.items;
+
+                    for(int i = 0; i < count; i++){
+                        printf("%s %s %f %s\n",sel == i ? "xx>" : "",ingredientNames[it->item.id-1],it->item.amount,unitNames[it->item.unit]);
+                        it = it->nextItem;
+                    }
+                    printf("%s Avbryt\n",sel == count ? "xx>" : "");
+                    while((input = (char)getch()) != '\r'){
+                        it = rec.items;
+                        system("cls");
+                        printf("Ta bort ingrediens\n");
+                        if(input == '\t'){
+                            sel = (sel + 1) % (count+1);
+                        }
+                        for(int i = 0; i < count; i++){
+                            printf("%s %s %f %s\n",sel == i ? "xx>" : "",ingredientNames[it->item.id-1],it->item.amount,unitNames[it->item.unit]);
+                            it = it->nextItem;
+                        }
+                        printf("%s Avbryt\n",sel == count ? "xx>" : "");
+                    }
+                    if(sel < count){
+                        it = rec.items;
+                        for(int i = 0; i < sel; i++){
+                            it = it->nextItem;
+                        }
+                        removeItemRecipe(&rec,it);
+                    }
+                    break;
+                case 3:
+                    break;
+                case 0:
+                    saveRecipeToFile(fileNameWithEnding,rec);
+                    finish = 1;
+            }
+        }
+        fclose(file);
+    }
 }
 
