@@ -38,6 +38,7 @@ void addIngredient(IngredientList* list, char* name, Unit unit){
         }
     }
     ingredient.id = nextAvailableIndex;
+    list->ingredients = realloc(list->ingredients,(list->numIngredients+1)*sizeof(Ingredient));
     list->ingredients[list->numIngredients] = ingredient;
     list->numIngredients++;
 }
@@ -80,6 +81,9 @@ IngredientList loadIngredients(char* fileName){
         Ingredient ing = createIngredient(id,name,unit);
         if(list.numIngredients == 0){
             list.ingredients = malloc(sizeof(Ingredient));
+            if(list.ingredients == NULL){
+                printf_s("\nCrap! Memory got away...\n");
+            }
         } else{
             Ingredient* tempPtr = realloc(list.ingredients,sizeof(Ingredient) * (list.numIngredients+1));
             if(tempPtr == NULL){
@@ -88,8 +92,15 @@ IngredientList loadIngredients(char* fileName){
                 list.ingredients = tempPtr;
             }
         }
+
         list.ingredients[list.numIngredients] = ing;
         list.numIngredients++;
+    }
+    if(list.numIngredients == 0){
+        list.ingredients = malloc(sizeof(Ingredient));
+        if(list.ingredients == NULL){
+            printf_s("\nCrap! Memory got away...\n");
+        }
     }
     fclose(file);
     return list;

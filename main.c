@@ -18,7 +18,7 @@ int main() {
 
     int running = 1;
     list = loadIngredients("ingredients.txt");
-
+    //saveIngredients("ingredients.txt",list);
     Recipe* r =  importRecipes();
     while (running){
         system("chcp 65001");
@@ -40,6 +40,7 @@ int main() {
             case 2:
                 system("cls");
                 createNewRecipe(&list);
+                free(r);
                 r = importRecipes();
                 break;
             case 3:
