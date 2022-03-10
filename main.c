@@ -10,7 +10,7 @@ void showRecipes(Recipe* recipes);
 Recipe* importRecipes();
 void createNewIngredient(IngredientList* list);
 void createNewRecipe(IngredientList* list);
-
+Item * createShoppingList(Recipe* recs, int numOfRecipes, int * numOfItems);
 IngredientList list;
 Recipe* recipes;
 int numOfRecipes = 0;
@@ -48,8 +48,14 @@ int main() {
                 break;
             case 4:
                 system("cls");
-                printf_s("Skapar inköpslista");
-                scanf("%d",&answer);
+                int numItems = 0;
+                Item* items = createShoppingList(r,numOfRecipes, &numItems);
+                for(int i = 0; i < numItems; i++){
+                    Ingredient in = getIngredientByID(list,items[i].id);
+                    printf("* %f %s %s\n",items[i].amount,unitNames[items[i].unit], in.name);
+                }
+                getch();
+                free(items);
                 break;
             case 5:
                 running = 0;
@@ -295,3 +301,27 @@ void createNewRecipe(IngredientList* list){
     }
 }
 
+//Create shopping list
+Item * createShoppingList(Recipe* recs, int numOfRec, int * numOfItems){
+    Item * l;
+    int allocated = 10;
+    int items = 0;
+    l = calloc(allocated,sizeof(Item));
+    for(int i = 0; i < numOfRec; i++){
+        ListItem * currItem = recs[i].items;
+        while (currItem != NULL){
+            if(allocated == items){
+                allocated = allocated + 10;
+                Item * tmp = realloc(l,allocated * sizeof(Item));
+                if (tmp == NULL){
+                    printf("Failed to create list");
+                    break;
+                }
+            }
+            l[items] = currItem->item;
+            items ++;
+            currItem = currItem->nextItem;
+        }
+    } *numOfItems = items;
+    return l;
+}
