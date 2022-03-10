@@ -1,4 +1,4 @@
-//
+﻿//
 // Created by erlan on 2021-11-21.
 //
 #include "strproperty.h"
@@ -172,6 +172,7 @@ char* getStrInput(char* prompt, int minChars, int maxChars){
         fflush(stdin);
         fgets(answer,maxChars+3,stdin);
     }
+    fflush(stdin);
     char* returnAnswer = malloc(strlen(answer));
     strcpy(returnAnswer,answer);
     returnAnswer[strlen(answer)-1] = '\0';

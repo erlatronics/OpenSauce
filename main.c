@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "ingredient.h"
 #include "recipe.h"
-#include <locale.h>
 #include <windows.h>
 #include <dirent.h>
 #include "strproperty.h"
@@ -17,22 +16,19 @@ Recipe* recipes;
 int numOfRecipes = 0;
 int main() {
 
-    setlocale(LC_ALL, "swedish");
     int running = 1;
     list = loadIngredients("ingredients.txt");
 
-    //char* text = getStrInput("Enter Name of file",3,10);
-    //char* text = autoComplete("--OpenSauce--\n\nNamn pa ingrediens:",ingredientNames,list.numIngredients,&choice);
-    //free(ingredientNames);
     Recipe* r =  importRecipes();
     while (running){
+        system("chcp 65001");
         system("cls");
         printf_s("--OpenSauce--\n\n");
         printf_s("1) Visa Recept\n");
         printf_s("2) Skapa Recept\n");
-        printf_s("3) Lagg till ingrediens\n");
-        printf_s("4) Skapa inkopslista\n");
-        printf_s("5) Stang program\n");
+        printf_s("3) Lägg till ingrediens\n");
+        printf_s("4) Skapa inköpslista\n");
+        printf_s("5) Stäng program\n");
         int answer;
         char enter;
         scanf("%d",&answer);
@@ -51,7 +47,7 @@ int main() {
                 break;
             case 4:
                 system("cls");
-                printf_s("Skapar inkopslista");
+                printf_s("Skapar inköpslista");
                 scanf("%d",&answer);
                 break;
             case 5:
@@ -59,8 +55,6 @@ int main() {
                 break;
         }
     }
-    //Recipe r = loadRecipeFromFile("recipes/Spaghetti_Bolognese.recipe");
-    //printRecipe(r,list);
     return 0;
 }
 
@@ -73,7 +67,7 @@ void showRecipes(Recipe* recipes){
         for(int i = 0; i < numOfRecipes; i++){
             printf_s("%d) %s\n",i+1,recipes[i].name);
         }
-        printf_s("0) Ga tillbaka\n");
+        printf_s("0) Gå tillbaka\n");
 
         int answer;
         scanf("%d",&answer);
@@ -83,8 +77,9 @@ void showRecipes(Recipe* recipes){
                 system("cls");
                 printHeader();
                 printRecipe(recipes[answer-1],list);
-                printf_s("\n0) Stang: \n");
+                printf_s("\n0) Stäng: \n");
                 scanf("%d",&answer1);
+
             }while(answer1 != 0);
         }
         else if(answer == 0){
@@ -121,12 +116,12 @@ Recipe* importRecipes(){
 void createNewIngredient(IngredientList* list){
     int running = 1;
     while(running){
-        char* ingName =getStrInput("--Add Ingredient--\nName:",2,INGREDIENT_NAME_MAX_CHARACTERS);
+        char* ingName =getStrInput("--Lägg till ingrediens--\nName:",2,INGREDIENT_NAME_MAX_CHARACTERS);
 
-        char* ingUnit =getStrInput("--Add Ingredient--\nStandard Unit:",1,10);
+        char* ingUnit =getStrInput("--Lägg till ingrediens--\nStandard Unit:",1,10);
 
         while(getUnitFromName(ingUnit) == -1){
-            ingUnit =getStrInput("--Add Ingredient--\nPlease Enter a valid unit\nStandard Unit:\n",1,10);
+            ingUnit =getStrInput("--Lägg till ingrediens--\nPlease Enter a valid unit\nStandard Unit:\n",1,10);
         }
 
         Unit unit = getUnitFromName(ingUnit);
@@ -168,7 +163,7 @@ void createNewRecipe(IngredientList* list){
     int finish = 0;
     if(file != NULL){
         Recipe rec = createRecipe(name);
-        setRecipeDescription(&rec,"None\n");
+        setRecipeDescription(&rec,"None");
         char** ingredientNames = calloc(sizeof(char*),(*list).numIngredients);
         for(int i = 0; i < (*list).numIngredients; i++){
             ingredientNames[i] = (char*)(*list).ingredients[i].name;
@@ -260,6 +255,35 @@ void createNewRecipe(IngredientList* list){
                     }
                     break;
                 case 3:
+                    system("cls");
+                    char descInput;
+                    char* description = malloc(200);
+                    int writeIndex = sprintf(description,"%s",rec.description);
+
+                    printf("---Description---\n\n");
+                    printf("%s\n---------\nTryck ESC för att gå tillbaka",description);
+                    while ((descInput = (char)getch()) != 27){
+                        system("cls");
+                        if(descInput == '\r'){
+                            descInput = '\n';
+                        }
+                        if(descInput == '\b'){
+                            if(writeIndex > 0){
+                                description[writeIndex] = '\0';
+                                writeIndex--;
+                            }
+                        }else{
+                            description[writeIndex] = descInput;
+                            writeIndex++;
+                        }
+                        description[writeIndex] = '\0';
+                        printf("---Description---\n\n");
+                        printf("%s\n---------\nTryck ESC för att gå tillbaka",description);
+
+                    }
+
+                    setRecipeDescription(&rec,description);
+                    free(description);
                     break;
                 case 0:
                     saveRecipeToFile(fileNameWithEnding,rec);
