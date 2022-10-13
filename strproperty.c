@@ -12,7 +12,7 @@ int strContains(char* string, char* substring);
 
 float getFloatProperty(char* string, char* property){
     char stringCopy[MAX_LINE_LENGTH];
-    strcpy(stringCopy, string);
+    strcpy_s(stringCopy,MAX_LINE_LENGTH, string);
     char* valueStringStr = strstr(stringCopy, property);
     if(strlen(valueStringStr) > 1){
         //Find the id
@@ -36,14 +36,15 @@ float getFloatProperty(char* string, char* property){
 char* getStringProperty(char* string, char* property){
     //Find the valueString
     char stringCopy[MAX_LINE_LENGTH];
-    strcpy(stringCopy, string);
+    strcpy_s(stringCopy,MAX_LINE_LENGTH, string);
     char* valueStringStr = strstr(stringCopy, property);
     char* valueString;
+    char* nextToken;
     if(valueStringStr != NULL){
         //Find the beginning of string after the "
         char* stringStart = strstr(valueStringStr, "\"");
         if(stringStart != NULL){
-            valueString = strtok(stringStart, "\"");
+            valueString = strtok_s(stringStart , "\"", &nextToken);
         } else{
             valueString = "";
             printf("\nCould not find string property \"%s\" in string \"%s\"\n",property,string);
@@ -54,12 +55,12 @@ char* getStringProperty(char* string, char* property){
         printf("\nNot able to read string property \"%s\" for string \"%s\"\n",property,string);
     }
     char* valueStringAllocated = calloc(strlen(valueString)+1,sizeof(char));
-    strncpy(valueStringAllocated,valueString, strlen(valueString)+1);
+    strncpy_s(valueStringAllocated,strlen(valueString) + 1, valueString, strlen(valueString) + 1);
     return valueStringAllocated;
 }
 int getIntProperty(char* string, char* property){
     char stringCopy[MAX_LINE_LENGTH];
-    strcpy(stringCopy, string);
+    strcpy_s(stringCopy, MAX_LINE_LENGTH, string);
     char* valueStringStr = strstr(stringCopy, property);
     if(strlen(valueStringStr) > 1){
         //Find the id
@@ -88,7 +89,7 @@ char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* ch
     system("cls");
     printf_s("%s\r\n>>>",prompt);
     char* text = malloc(sizeof(char)* 100);
-    while((input = (char)getch()) != '\r'){
+    while((input = (char)_getch()) != '\r'){
         system("cls");
         if(input == '\b'){
             if(length > 0){
@@ -127,7 +128,7 @@ char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* ch
             *chosen = -1;
         }
         char* returnedText = calloc(strlen(text)+1,sizeof(char));
-        strcpy(returnedText,text);
+        strcpy_s(returnedText,strlen(text)+1, text);
         free(text);
         return returnedText;
     }
@@ -160,21 +161,26 @@ int strContains(char* string, char* substring){
     }
     return (strstr(lowerString,lowerSubString)) != NULL;
 }
-char* getStrInput(char* prompt, int minChars, int maxChars){
+char* getStrInput(char* prompt, int minChars, const int maxChars){
     system("cls");
-    fflush(stdin);
+    char input;
+    //fflush(stdin);
+    //while ((getchar()) != '\n');
     printf_s("%s\r\n",prompt);
-    char answer[maxChars+3];
+    char* answer = malloc(maxChars+3);
     fgets(answer,maxChars+3,stdin);
     while (strlen(answer) <= minChars || strlen(answer) > maxChars+1){
         system("cls");
         printf_s("%s\n%s",prompt, strlen(answer) < maxChars ? "String too short\r\n" : "String too long\r\n");
-        fflush(stdin);
+        //fflush(stdin);
+        while ((getchar()) != '\n');
         fgets(answer,maxChars+3,stdin);
     }
-    fflush(stdin);
+    //fflush(stdin);
+    //while ((getchar()) != '\n');
     char* returnAnswer = malloc(strlen(answer));
-    strcpy(returnAnswer,answer);
+    strcpy_s(returnAnswer,strlen(answer)+1, answer);
     returnAnswer[strlen(answer)-1] = '\0';
+    free(answer);
     return returnAnswer;
 }

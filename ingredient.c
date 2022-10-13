@@ -20,7 +20,7 @@ Ingredient createIngredient(int id, char* name, Unit unit){
     Ingredient ing;
     ing.id = id;
     //snprintf(ing.name,INGREDIENT_NAME_MAX_CHARACTERS,"%s",name);
-    strncpy(ing.name, name,INGREDIENT_NAME_MAX_CHARACTERS);
+    strncpy_s(ing.name, INGREDIENT_NAME_MAX_CHARACTERS,  name, INGREDIENT_NAME_MAX_CHARACTERS);
     ing.name[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
     ing.unit = unit;
     return ing;
@@ -28,7 +28,7 @@ Ingredient createIngredient(int id, char* name, Unit unit){
 
 void addIngredient(IngredientList* list, char* name, Unit unit){
     Ingredient ingredient;
-    strcpy(ingredient.name,name);
+    strcpy_s(ingredient.name, INGREDIENT_NAME_MAX_CHARACTERS,name);
     ingredient.name[INGREDIENT_NAME_MAX_CHARACTERS-1] = '\0';
     ingredient.unit = unit;
     int nextAvailableIndex = 0;
@@ -38,7 +38,14 @@ void addIngredient(IngredientList* list, char* name, Unit unit){
         }
     }
     ingredient.id = nextAvailableIndex;
-    list->ingredients = realloc(list->ingredients,(list->numIngredients+1)*sizeof(Ingredient));
+    if (list->numIngredients > 0) {
+        list->ingredients = realloc(list->ingredients, (list->numIngredients + 1) * sizeof(Ingredient));
+
+    }
+    else
+    {
+        list->ingredients = malloc(sizeof(Ingredient));
+    }
     list->ingredients[list->numIngredients] = ingredient;
     list->numIngredients++;
 }
@@ -56,7 +63,8 @@ void changeItemUnit(Item* i, Unit desiredUnit){
 IngredientList loadIngredients(char* fileName){
     IngredientList list;
     list.numIngredients = 0;
-    FILE* file = fopen(fileName,"r");
+    FILE* file;
+    fopen_s(&file,fileName, "r");
     if(file == NULL){
         printf_s("Not a file");
         return list;
@@ -65,9 +73,9 @@ IngredientList loadIngredients(char* fileName){
     char* line;
     while ((line = fgets(lineBuffer,MAX_LINE_LENGTH,file)) != NULL) {
         int id = getIntProperty(line,"id:");
-        if(id == 0){
+        /*if (id == 0) {
             printf_s("ID doesn't exist");
-        }
+        }*/
         char* name = getStringProperty(line,"name:");
         if(strlen(name) <2){
             printf_s("Name doesn't exist");
@@ -107,7 +115,8 @@ IngredientList loadIngredients(char* fileName){
 }
 
 int saveIngredients(char* fileName, IngredientList list){
-    FILE* file = fopen(fileName,"w");
+    FILE* file;
+    fopen_s(&file, fileName, "w");
     if(file == NULL){
         return 0;
     }
@@ -129,7 +138,7 @@ Ingredient getIngredientByID(IngredientList list, int id){
         }
     }
     Ingredient ing;
-    strcpy(ing.name,"NO INGREDIENT");
+    strcpy_s(ing.name,INGREDIENT_NAME_MAX_CHARACTERS,"NO INGREDIENT");
     ing.id = 0;
     ing.unit = 0;
     return ing;

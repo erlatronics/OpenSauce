@@ -8,7 +8,7 @@
 #include "strproperty.h"
 Recipe createRecipe(char* name){
     Recipe newRecipe;
-    strncpy(newRecipe.name,name,RECIPE_NAME_MAX_CHARACTERS);
+    strncpy_s(newRecipe.name,RECIPE_NAME_MAX_CHARACTERS,name,RECIPE_NAME_MAX_CHARACTERS);
     newRecipe.name[RECIPE_NAME_MAX_CHARACTERS-1] = '\0';
     newRecipe.items = NULL;
     newRecipe.description = NULL;
@@ -20,8 +20,8 @@ void setRecipeDescription(Recipe* rec, char* desc){
     if(rec->description != NULL){
         free(rec->description);
     }
-    rec->description = calloc(descLength,sizeof(char));
-    strncpy(rec->description,desc,descLength);
+    rec->description = calloc(descLength+1,sizeof(char));
+    strncpy_s(rec->description,descLength+1,desc,descLength+1);
 }
 
 void addItemRecipe(Recipe* rec, Item item){
@@ -86,7 +86,8 @@ void printRecipe(Recipe recipe, IngredientList list){
 Recipe loadRecipeFromFile(char* fileName)
 {
     Recipe recipe;
-    FILE* file = fopen(fileName,"r");
+    FILE* file;
+    fopen_s(&file,fileName, "r");
     char* line;
     char lineBuffer[MAX_LINE_LENGTH];
     if(file != NULL){
@@ -122,7 +123,8 @@ Recipe loadRecipeFromFile(char* fileName)
     return recipe;
 }
 void saveRecipeToFile(char* fileName,Recipe recipe){
-    FILE* file = fopen(fileName,"w");
+    FILE* file;
+    fopen_s(&file,fileName, "w");
     ListItem* currentItem = recipe.items;
     int items = 0;
     while (currentItem != NULL){
