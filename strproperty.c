@@ -169,16 +169,17 @@ char* getStrInput(char* prompt, int minChars, const int maxChars){
     printf_s("%s\r\n",prompt);
     char* answer = malloc(maxChars+3);
     fgets(answer,maxChars+3,stdin);
+    //while ((getchar()) != '\n');
     while (strlen(answer) <= minChars || strlen(answer) > maxChars+1){
         system("cls");
         printf_s("%s\n%s",prompt, strlen(answer) < maxChars ? "String too short\r\n" : "String too long\r\n");
         //fflush(stdin);
-        while ((getchar()) != '\n');
         fgets(answer,maxChars+3,stdin);
+        //while ((getchar()) != '\n');
     }
     //fflush(stdin);
     //while ((getchar()) != '\n');
-    char* returnAnswer = malloc(strlen(answer));
+    char* returnAnswer = malloc(strlen(answer)+1);
     strcpy_s(returnAnswer,strlen(answer)+1, answer);
     returnAnswer[strlen(answer)-1] = '\0';
     free(answer);

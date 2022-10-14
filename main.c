@@ -6,7 +6,8 @@
 #include "strproperty.h"
 #include <conio.h>
 #include <string.h>
-#include<sys/stat.h>
+#include <sys/stat.h>
+#include <direct.h>
 
 #define printHeader() printf_s("--OpenSauce--\n\n");
 
@@ -149,6 +150,7 @@ void createNewIngredient(IngredientList* list){
         }
         int quit;
         scanf_s("%d",&quit);
+        while ((getchar()) != '\n');
         if(quit == 0){
             running = 0;
         }
@@ -157,19 +159,24 @@ void createNewIngredient(IngredientList* list){
 void createNewRecipe(IngredientList* list){
     char* name = getStrInput("---OpenSauce---\n---Recipe Maker---\n\nNamn pa nytt recept\n",3,RECIPE_NAME_MAX_CHARACTERS);
     char* fileName = getStrInput("---OpenSauce---\n---Recipe Maker---\n\nFilnamn for recept\n",3,30);
-    int fileNameLength = strlen(fileName) + 16;
-    char* fileNameWithEnding = malloc(fileNameLength);
-    strcpy_s(fileNameWithEnding,fileNameLength,"recipes/");
-    strcat_s(fileNameWithEnding, fileNameLength,fileName);
-    strcat_s(fileNameWithEnding, fileNameLength,".recipe");
+    char* fileNameWithEnding = malloc(FILENAME_MAX);
+    struct stat st = { 0 };
+    if (stat("recipes", &st) == -1) {
+        _mkdir("recipes");
+    }
+    _getcwd(fileNameWithEnding, FILENAME_MAX);
+    strcat_s(fileNameWithEnding, FILENAME_MAX,"\\recipes\\");
+    strcat_s(fileNameWithEnding, FILENAME_MAX,fileName);
+    strcat_s(fileNameWithEnding, FILENAME_MAX,".recipe");
     FILE* file;
     struct stat buffer;
     //Check if recipe already exists
     while(stat(fileNameWithEnding, &buffer) == 0){
         free(fileNameWithEnding);
         fileName = getStrInput("---OpenSauce---\n---Recipe Maker---\nFilen fanns redan, skriv nytt\n",3,30);
-        fileNameWithEnding = malloc(strlen(fileName)+16);
-        strcpy_s(fileNameWithEnding,9,"recipes/");
+        fileNameWithEnding = malloc(FILENAME_MAX);
+        _getcwd(fileNameWithEnding, FILENAME_MAX);
+        strcat_s(fileNameWithEnding,9,"\\recipes\\");
         strcat_s(fileNameWithEnding,30,fileName);
         strcat_s(fileNameWithEnding,8,".recipe");
     }
@@ -177,15 +184,9 @@ void createNewRecipe(IngredientList* list){
     err = fopen_s(&file,fileNameWithEnding,"w");
     if (err == 0)
     {
-        printf("The file 'crt_fopen_s.c' was opened\n");
         fclose(file);
     }
-    else
-    {
-        printf("The file 'crt_fopen_s.c' was not opened\n");
-     
-    }
-
+    
     int finish = 0;
     if(file != NULL){
         Recipe rec = createRecipe(name);
@@ -218,10 +219,11 @@ void createNewRecipe(IngredientList* list){
                         autoComplete("Ny ingrediens skapad\nLagg till Ingrediens:\n",ingredientNames,(*list).numIngredients,&chosen);
                     }
                     char* amountAnswer = getStrInput("Hur mycket? (mangd enhet)",3, 100);
-                    char* amountStr = malloc(100);
-                    strtok_s(amountStr, amountAnswer, " ");
-                    char* unitStr = malloc(100);
-                    strtok_s(unitStr,NULL, " ");
+                    char* amountStr;
+                    char* nextToken;
+                    amountStr = strtok_s(amountAnswer, " ", &nextToken);
+                    char* unitStr;
+                    unitStr = strtok_s(NULL, " ",&nextToken);
                     Unit unit = getUnitFromName(unitStr);
                     int amount = 0;
                     if(amountStr != NULL && unitStr != NULL){
@@ -238,11 +240,12 @@ void createNewRecipe(IngredientList* list){
                     }
                     Item item;
                     item.unit = unit;
-                    item.amount = (float)strtold(amountStr,&unitStr);
+                    item.amount = (float)strtof(amountStr,&unitStr);
                     item.id = list->ingredients[chosen].id;
                     addItemRecipe(&rec,item);
-                    free(amountStr);
-                    free(unitStr);
+                    free(amountAnswer);
+                    amountStr = NULL;
+                    unitStr = NULL;
                     break;
                 case 2:
                     system("cls");
