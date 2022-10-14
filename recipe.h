@@ -8,7 +8,10 @@
 #define RECIPE_NAME_MAX_CHARACTERS 60
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <wchar.h>
 #include "ingredient.h"
+#include "strproperty.h"
 
 typedef struct ListItem{
     Item item;
@@ -17,18 +20,18 @@ typedef struct ListItem{
 }ListItem;
 
 typedef struct {
-    char name[RECIPE_NAME_MAX_CHARACTERS];
-    char* description;
+    wchar_t name[RECIPE_NAME_MAX_CHARACTERS];
+    wchar_t* description;
     ListItem * items;
 }Recipe;
 
 
-Recipe createRecipe(char* name);
-void setRecipeDescription(Recipe* rec, char* desc);
+Recipe createRecipe(wchar_t* name);
+void setRecipeDescription(Recipe* rec, wchar_t* desc);
 void addItemRecipe(Recipe* rec, Item ing);
 void removeItemRecipe(Recipe* rec, ListItem* item);
 void printRecipe(Recipe recipe, IngredientList list);
-Recipe loadRecipeFromFile(char* fileName);
-void saveRecipeToFile(char* fileName,Recipe recipe);
+Recipe loadRecipeFromFile(wchar_t* fileName);
+void saveRecipeToFile(wchar_t* fileName,Recipe recipe);
 
 #endif //OPENSAUCE_RECIPE_H

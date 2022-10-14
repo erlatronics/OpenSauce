@@ -2,7 +2,6 @@
 // Created by erlan on 2021-11-09.
 //
 #include "unit.h"
-#include "string.h"
 enum unitType{volume, weight};
 
 //Convert the volume from one volume Unit to another
@@ -125,12 +124,12 @@ float convertUnit(float value , Unit currentUnit, Unit desiredUnit){
     return -1;
 }
 
-Unit getUnitFromName(char* name){
+Unit getUnitFromName(wchar_t* name){
     if(name != NULL){
         for(int i = 0; i < NUM_UNITS; i++){
-            char* pt = strstr(name,unitNames[i]);
+            wchar_t* pt = wcsstr(name,unitNames[i]);
             if(pt != NULL){
-                if(strlen(name) == strlen(unitNames[i])){
+                if(wcslen(name) == wcslen(unitNames[i])){
                     return i;
                 }
             }
