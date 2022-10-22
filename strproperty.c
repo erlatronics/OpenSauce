@@ -8,43 +8,43 @@
 #include <windows.h>
 #include <conio.h>
 
-int strContains(char* string, char* substring);
+int strContains(wchar_t* string, wchar_t* substring);
 
-float getFloatProperty(char* string, char* property){
-    char stringCopy[MAX_LINE_LENGTH];
-    strcpy_s(stringCopy,MAX_LINE_LENGTH, string);
-    char* valueStringStr = strstr(stringCopy, property);
-    if(strlen(valueStringStr) > 1){
+float getFloatProperty(wchar_t* string, wchar_t* property){
+    wchar_t stringCopy[MAX_LINE_LENGTH];
+    wcscpy_s(stringCopy,MAX_LINE_LENGTH, string);
+    wchar_t* valueStringStr = wcsstr(stringCopy, property);
+    if(wcslen(valueStringStr) > 1){
         //Find the id
-        char* intStr = strstr(valueStringStr, property);
+        char* intStr = wcsstr(valueStringStr, property);
         float value;
         if(intStr != NULL){
             //Add the length of the property text to find start read position
-            char* intStart = intStr + strlen(property);
+            char* intStart = intStr + wcslen(property);
             char* intEnd;
-            value = strtof(intStart, &intEnd);
+            value = wcstof(intStart, &intEnd);
         }
         else{
-            printf_s("\nNot able to read float property \"%s\" for string \"%s\"\n",property,string);
+            wprintf_s(L"\nNot able to read float property \"%s\" for string \"%s\"\n",property,string);
             value = -1;
         }
         return value;
     }
-    printf_s("\nNot able to read float property \"%s\" since string is empty",property,string);
+    wprintf_s(L"\nNot able to read float property \"%s\" since string is empty",property,string);
     return -1;
 }
-char* getStringProperty(char* string, char* property){
+char* getStringProperty(wchar_t* string, wchar_t* property){
     //Find the valueString
-    char stringCopy[MAX_LINE_LENGTH];
-    strcpy_s(stringCopy,MAX_LINE_LENGTH, string);
-    char* valueStringStr = strstr(stringCopy, property);
-    char* valueString;
-    char* nextToken;
+    wchar_t stringCopy[MAX_LINE_LENGTH];
+    wcscpy_s(stringCopy,MAX_LINE_LENGTH, string);
+    wchar_t* valueStringStr = wcsstr(stringCopy, property);
+    wchar_t* valueString;
+    wchar_t* nextToken;
     if(valueStringStr != NULL){
         //Find the beginning of string after the "
-        char* stringStart = strstr(valueStringStr, "\"");
+        char* stringStart = wcsstr(valueStringStr, "\"");
         if(stringStart != NULL){
-            valueString = strtok_s(stringStart , "\"", &nextToken);
+            valueString = wcstok_s(stringStart , "\"", &nextToken);
         } else{
             valueString = "";
             printf("\nCould not find string property \"%s\" in string \"%s\"\n",property,string);
@@ -54,71 +54,71 @@ char* getStringProperty(char* string, char* property){
         valueString = "";
         printf("\nNot able to read string property \"%s\" for string \"%s\"\n",property,string);
     }
-    char* valueStringAllocated = calloc(strlen(valueString)+1,sizeof(char));
-    strncpy_s(valueStringAllocated,strlen(valueString) + 1, valueString, strlen(valueString) + 1);
+    wchar_t* valueStringAllocated = calloc(wcslen(valueString)+1,sizeof(char));
+    wcsncpy_s(valueStringAllocated,wcslen(valueString) + 1, valueString, wcslen(valueString) + 1);
     return valueStringAllocated;
 }
-int getIntProperty(char* string, char* property){
-    char stringCopy[MAX_LINE_LENGTH];
-    strcpy_s(stringCopy, MAX_LINE_LENGTH, string);
-    char* valueStringStr = strstr(stringCopy, property);
-    if(strlen(valueStringStr) > 1){
+int getIntProperty(wchar_t* string, wchar_t* property){
+    wchar_t stringCopy[MAX_LINE_LENGTH];
+    wcscpy_s(stringCopy, MAX_LINE_LENGTH, string);
+    wchar_t* valueStringStr = wcsstr(stringCopy, property);
+    if(wcslen(valueStringStr) > 1){
         //Find the id
-        char* intStr = strstr(valueStringStr, property);
+        char* intStr = wcsstr(valueStringStr, property);
         int value;
         if(intStr != NULL){
             //Add the length of the property text to find start read position
-            char* idStart = intStr + strlen(property);
-            char* idEnd;
-            value = strtol(idStart,&idEnd,0);
+            wchar_t* idStart = intStr + wcslen(property);
+            wchar_t* idEnd;
+            value = wcstol(idStart,&idEnd,0);
         }
         else{
-            printf_s("\nNot able to read int property \"%s\" for string \"%s\"\n",property,stringCopy);
+            wprintf_s("L\nNot able to read int property \"%s\" for string \"%s\"\n",property,stringCopy);
             value = -1;
         }
         return value;
     }
-    printf_s("\nNot able to read int property \"%s\" since string is empty",property,stringCopy);
+    wprintf_s("L\nNot able to read int property \"%s\" since string is empty",property,stringCopy);
     return -1;
 }
-char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* chosen){
-    char input;
+char* autoComplete(wchar_t* prompt, wchar_t** suggestions, int numSuggestions, int* chosen){
+    wint_t input;
     int length = 0;
     int selection = 0;
     int suggested = 0;
     system("cls");
-    printf_s("%s\r\n>>>",prompt);
-    char* text = malloc(sizeof(char)* 100);
-    while((input = (char)_getch()) != '\r'){
+    wprintf_s(L"%s\r\n>>>",prompt);
+    wchar_t* text = malloc(sizeof(wchar_t)* 100);
+    while((input = _getwch()) != L'\r'){
         system("cls");
-        if(input == '\b'){
+        if(input == L'\b'){
             if(length > 0){
-                text[length-1] = '\0';
+                text[length-1] = L'\0';
                 length--;
             }
-            printf_s("%s\r\n%s%s\n", prompt,selection == 0 ? ">>>" : "", text);
+            wprintf_s(L"%s\r\n%s%s\n", prompt,selection == 0 ? L">>>" : L"", text);
         }
-        else if(input == '\t'){
+        else if(input == L'\t'){
             if(selection == suggested){
                 selection = 0;
             } else {
                 selection++;
             }
-            printf_s("%s\r\n%s%s\n", prompt,selection == 0 ? ">>>" : "", text);
+            wprintf_s(L"%s\r\n%s%s\n", prompt,selection == 0 ? L">>>" : L"", text);
         }
         else {
             selection = 0;
             text[length] = input;
             text[length + 1] = '\0';
             length++;
-            printf_s("%s\r\n>>>%s\n", prompt, text);
+            wprintf_s(L"%s\r\n>>>%s\n", prompt, text);
         }
         if(length > 2){
             suggested = 0;
             for(int i = 0; i < numSuggestions; i++){
                 if(strContains(suggestions[i],text)){
                     suggested++;
-                    printf_s("%s*%s*\n",selection == suggested ? ">>>" : "",suggestions[i]);
+                    wprintf_s(L"%s*%s*\n",selection == suggested ? L">>>" : L"",suggestions[i]);
                 }
             }
         }
@@ -127,8 +127,8 @@ char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* ch
         if(chosen != NULL){
             *chosen = -1;
         }
-        char* returnedText = calloc(strlen(text)+1,sizeof(char));
-        strcpy_s(returnedText,strlen(text)+1, text);
+        char* returnedText = calloc(strlen(text)+1,sizeof(wchar_t));
+        wcscpy_s(returnedText,wcslen(text)+1, text);
         free(text);
         return returnedText;
     }
@@ -148,40 +148,43 @@ char* autoComplete(char* prompt, char** suggestions, int numSuggestions, int* ch
         }
     }
 }
-int strContains(char* string, char* substring){
-    int stringLength = (int)strlen(string);
-    int subLength = (int)strlen(substring);
-    char* lowerString = malloc(stringLength);
-    char* lowerSubString = malloc(subLength);
-    for(int i = 0; i < stringLength; i++){
-        lowerString[i] = (char)tolower(string[i]);
-    }
-    for(int i = 0; i < subLength; i++){
-        lowerSubString[i] = (char)tolower(substring[i]);
-    }
-    return (strstr(lowerString,lowerSubString)) != NULL;
+int strContains(wchar_t* string, wchar_t* substring){
+    int stringLength = (int)wcslen(string);
+    int subLength = (int)wcslen(substring);
+    wchar_t* lowerString = calloc(stringLength,sizeof(wchar_t));
+    wcscpy_s(lowerString, stringLength + 1, string);
+    wchar_t* lowerSubString = calloc(subLength, sizeof(wchar_t));
+    wcscpy_s(lowerSubString, stringLength + 1, substring);
+
+    //for(int i = 0; i < stringLength; i++){
+        _wcslwr_s(lowerString,stringLength+1);
+    //}
+    //for(int i = 0; i < subLength; i++){
+        _wcslwr_s(lowerSubString,subLength+1);
+    //}
+    return (wcsstr(lowerString,lowerSubString)) != NULL;
 }
-char* getStrInput(char* prompt, int minChars, const int maxChars){
+char* getStrInput(wchar_t* prompt, int minChars, const int maxChars){
     system("cls");
-    char input;
+    wchar_t input;
     //fflush(stdin);
     //while ((getchar()) != '\n');
-    printf_s("%s\r\n",prompt);
-    char* answer = malloc(maxChars+3);
-    fgets(answer,maxChars+3,stdin);
+    wprintf_s(L"%s\r\n",prompt);
+    wchar_t* answer = calloc(maxChars+3,sizeof(wchar_t));
+    fgetws(answer,maxChars+3,stdin);
     //while ((getchar()) != '\n');
-    while (strlen(answer) <= minChars || strlen(answer) > maxChars+1){
+    while (wcslen(answer) <= minChars || wcslen(answer) > maxChars+1){
         system("cls");
-        printf_s("%s\n%s",prompt, strlen(answer) < maxChars ? "String too short\r\n" : "String too long\r\n");
+        wprintf_s(L"%s\n%s",prompt, strlen(answer) < maxChars ? L"String too short\r\n" : L"String too long\r\n");
         //fflush(stdin);
-        fgets(answer,maxChars+3,stdin);
+        fgetws(answer,maxChars+3,stdin);
         //while ((getchar()) != '\n');
     }
     //fflush(stdin);
     //while ((getchar()) != '\n');
-    char* returnAnswer = malloc(strlen(answer)+1);
-    strcpy_s(returnAnswer,strlen(answer)+1, answer);
-    returnAnswer[strlen(answer)-1] = '\0';
+    wchar_t* returnAnswer = calloc(strlen(answer)+1,sizeof(wchar_t));
+    wcscpy_s(returnAnswer,wcslen(answer)+1, answer);
+    returnAnswer[wcslen(answer)-1] = L'\0';
     free(answer);
     return returnAnswer;
 }

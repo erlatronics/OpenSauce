@@ -71,13 +71,13 @@ void removeItemRecipe(Recipe* rec, ListItem* item){
     }
 }
 void printRecipe(Recipe recipe, IngredientList list){
-    printf_s(L"***%S***\n\nIngredienser:\n",recipe.name);
+    wprintf_s(L"***%S***\n\nIngredienser:\n",recipe.name);
     ListItem* ing = recipe.items;
     while (ing != NULL){
-        printf_s(L"*%.01f %S %S\n",ing->item.amount,unitNames[ing->item.unit], getIngredientByID(list,ing->item.id).name);
+        wprintf_s(L"*%.01f %S %S\n",ing->item.amount,unitNames[ing->item.unit], getIngredientByID(list,ing->item.id).name);
         ing = ing->nextItem;
     }
-    printf_s(L"\nInstruktioner:\n%S\n",recipe.description);
+    wprintf_s(L"\nInstruktioner:\n%S\n",recipe.description);
 }
 
 Recipe loadRecipeFromFile(wchar_t* fileName)
@@ -110,18 +110,18 @@ Recipe loadRecipeFromFile(wchar_t* fileName)
             fread(recipe.description,sizeof(wchar_t),descLen,file);
             recipe.description[descLen-1] = L'\0';
         } else{
-            printf_s("Failed reading first line in %S",fileName);
+            wprintf_s(L"Failed reading first line in %S",fileName);
             recipe = createRecipe(L"");
         } 
     }else{
-        printf_s("Failed Loading Recipe %S",fileName);
+        wprintf_s(L"Failed Loading Recipe %S",fileName);
         recipe = createRecipe(L"");
     }
     return recipe;
 }
 void saveRecipeToFile(wchar_t* fileName,Recipe recipe){
     FILE* file;
-    _wfopen_s(&file,fileName, "w");
+    _wfopen_s(&file,fileName, L"w");
     ListItem* currentItem = recipe.items;
     int items = 0;
     while (currentItem != NULL){
@@ -129,16 +129,16 @@ void saveRecipeToFile(wchar_t* fileName,Recipe recipe){
         currentItem = currentItem->nextItem;
     }
     if(file != NULL){
-        fprintf_s(file,"recipeName: \"%S\"; numIng: %d; descLen: %d\n",recipe.name,items, (int)wcslen(recipe.description));
+        fwprintf_s(file,L"recipeName: \"%S\"; numIng: %d; descLen: %d\n",recipe.name,items, (int)wcslen(recipe.description));
     }else{
         printf("\nFile %S not found\n",fileName);
         return;
     }
     currentItem = recipe.items;
     while (currentItem != NULL){
-        fprintf_s(file,"id: %d; unit: \"%s\"; amount: %f\n",currentItem->item.id,unitNames[currentItem->item.unit],currentItem->item.amount);
+        fwprintf_s(file,L"id: %d; unit: \"%s\"; amount: %f\n",currentItem->item.id,unitNames[currentItem->item.unit],currentItem->item.amount);
         currentItem = currentItem->nextItem;
     }
-    fprintf_s(file,"%S",recipe.description);
+    fwprintf_s(file,L"%S",recipe.description);
     fclose(file);
 }
