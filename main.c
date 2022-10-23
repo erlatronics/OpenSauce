@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <direct.h>
-
+#include <locale.h>
 #define printHeader() wprintf_s(L"--OpenSauce--\n\n");
 
 void showRecipes(Recipe* recipes);
@@ -26,7 +26,8 @@ int main() {
     //saveIngredients("ingredients.txt",list);
     Recipe* r =  importRecipes();
     while (running){
-        system("chcp 65001");
+        system("chcp 10000");
+        _wsetlocale(LC_ALL, "sv_SE.UTF-16");
         system("cls");
         wprintf_s(L"--OpenSauce--\n\n");
         wprintf_s(L"1) Visa Recept\n");
@@ -75,7 +76,7 @@ void showRecipes(Recipe* recipes){
     int running = 1;
     while(running){
         system("cls");
-        printHeader();
+         printHeader();
         for(int i = 0; i < numOfRecipes; i++){
             wprintf_s(L"%d) %s\n",i+1,recipes[i].name);
         }
@@ -103,21 +104,21 @@ Recipe* importRecipes(){
     recipes = calloc(30,sizeof(Recipe));
     
     HANDLE entry;
-    LPWIN32_FIND_DATA FindFileData;
-    //struct dirent* entry;
-    //folder = opendir("recipes/");
-    /*if (folder == NULL)
-    {
-        perror("Unable to read directory");
-    }*/
-    entry = FindFirstFile((LPCSTR)"recipes/*.recipe", &FindFileData);
+    WIN32_FIND_DATA FindFileData;
+
+    //wchar_t* pathToFile = malloc(FILENAME_MAX);
+    LPCWSTR pathToFile = L"C:\\Users\\GustavErlandsson\\source\\repos\\OpenSauce\\recipes\\*.recipe";
+//    _wgetcwd(pathToFile, FILENAME_MAX);
+  //  wcscat_s(pathToFile, 0, L"\\recipes\\*.recipe");
+    entry = FindFirstFileW(pathToFile, &FindFileData);
     while( entry != INVALID_HANDLE_VALUE  )
     {
-        int fileNameLength = 9 + wcslen(FindFileData->cFileName);
+        
+        int fileNameLength = 9 + wcslen(FindFileData.cFileName);
         wchar_t* path = calloc(fileNameLength,sizeof (wchar_t));
         if (path != NULL) {
-            wcscpy_s(path, fileNameLength, L"recipes/");
-            wcscat_s(path, fileNameLength, FindFileData->cFileName);
+            wcscpy_s(path, fileNameLength, L"recipes\\");
+            wcscat_s(path, fileNameLength, FindFileData.cFileName);
             recipes[numOfRecipes] = loadRecipeFromFile(path);
             numOfRecipes++;
             free(path);
@@ -128,6 +129,7 @@ Recipe* importRecipes(){
         }
         entry = FindNextFile(entry, &FindFileData);
     }
+    FindClose(entry);
 
     return recipes;
 }
@@ -239,6 +241,7 @@ void createNewRecipe(IngredientList* list){
                         amount = (int)(wcstold(amountStr,&unitStr));
                     }
                     while (amount <= 0 || unit == -1){
+                        free(amountAnswer);
                         amountAnswer = getStrInput(L"Ej korrekt ifyllt\nHur mycket? (mangd enhet)",4, 100);
                         wcstok_s(amountAnswer," ",&nextToken);
                         unitStr = wcstok_s(NULL,L" ",&nextToken);
@@ -252,9 +255,9 @@ void createNewRecipe(IngredientList* list){
                     item.amount = (float)wcstof(amountStr,&unitStr);
                     item.id = list->ingredients[chosen].id;
                     addItemRecipe(&rec,item);
+                    amountStr = NULL;
+                    unitStr = NULL;
                     free(amountAnswer);
-                    //amountStr = NULL;
-                    //unitStr = NULL;
                     break;
                 case 2:
                     system("cls");

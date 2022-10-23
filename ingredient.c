@@ -65,7 +65,7 @@ void changeItemUnit(Item* i, Unit desiredUnit){
     }
 
 }
-IngredientList loadIngredients(char* fileName){
+IngredientList loadIngredients(wchar_t* fileName){
     IngredientList list;
     list.numIngredients = 0;
     FILE* file;

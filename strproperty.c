@@ -33,7 +33,7 @@ float getFloatProperty(wchar_t* string, wchar_t* property){
     wprintf_s(L"\nNot able to read float property \"%s\" since string is empty",property,string);
     return -1;
 }
-char* getStringProperty(wchar_t* string, wchar_t* property){
+wchar_t* getStringProperty(wchar_t* string, wchar_t* property){
     //Find the valueString
     wchar_t stringCopy[MAX_LINE_LENGTH];
     wcscpy_s(stringCopy,MAX_LINE_LENGTH, string);
@@ -64,7 +64,7 @@ int getIntProperty(wchar_t* string, wchar_t* property){
     wchar_t* valueStringStr = wcsstr(stringCopy, property);
     if(wcslen(valueStringStr) > 1){
         //Find the id
-        char* intStr = wcsstr(valueStringStr, property);
+        wchar_t* intStr = wcsstr(valueStringStr, property);
         int value;
         if(intStr != NULL){
             //Add the length of the property text to find start read position
@@ -81,7 +81,7 @@ int getIntProperty(wchar_t* string, wchar_t* property){
     wprintf_s("L\nNot able to read int property \"%s\" since string is empty",property,stringCopy);
     return -1;
 }
-char* autoComplete(wchar_t* prompt, wchar_t** suggestions, int numSuggestions, int* chosen){
+wchar_t* autoComplete(wchar_t* prompt, wchar_t** suggestions, int numSuggestions, int* chosen){
     wint_t input;
     int length = 0;
     int selection = 0;
@@ -151,9 +151,9 @@ char* autoComplete(wchar_t* prompt, wchar_t** suggestions, int numSuggestions, i
 int strContains(wchar_t* string, wchar_t* substring){
     int stringLength = (int)wcslen(string);
     int subLength = (int)wcslen(substring);
-    wchar_t* lowerString = calloc(stringLength,sizeof(wchar_t));
+    wchar_t* lowerString = calloc(stringLength+1,sizeof(wchar_t));
     wcscpy_s(lowerString, stringLength + 1, string);
-    wchar_t* lowerSubString = calloc(subLength, sizeof(wchar_t));
+    wchar_t* lowerSubString = calloc(subLength+1, sizeof(wchar_t));
     wcscpy_s(lowerSubString, stringLength + 1, substring);
 
     //for(int i = 0; i < stringLength; i++){
@@ -164,7 +164,7 @@ int strContains(wchar_t* string, wchar_t* substring){
     //}
     return (wcsstr(lowerString,lowerSubString)) != NULL;
 }
-char* getStrInput(wchar_t* prompt, int minChars, const int maxChars){
+wchar_t* getStrInput(wchar_t* prompt, int minChars, const int maxChars){
     system("cls");
     wchar_t input;
     //fflush(stdin);
@@ -182,7 +182,7 @@ char* getStrInput(wchar_t* prompt, int minChars, const int maxChars){
     }
     //fflush(stdin);
     //while ((getchar()) != '\n');
-    wchar_t* returnAnswer = calloc(strlen(answer)+1,sizeof(wchar_t));
+    wchar_t* returnAnswer = calloc(wcslen(answer)+1,sizeof(wchar_t));
     wcscpy_s(returnAnswer,wcslen(answer)+1, answer);
     returnAnswer[wcslen(answer)-1] = L'\0';
     free(answer);
