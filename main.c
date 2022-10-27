@@ -105,13 +105,13 @@ Recipe* importRecipes(){
     
     HANDLE entry;
     WIN32_FIND_DATA FindFileData;
-
-    //wchar_t* pathToFile = malloc(FILENAME_MAX);
-    LPCWSTR pathToFile = L"C:\\Users\\GustavErlandsson\\source\\repos\\OpenSauce\\recipes\\*.recipe";
-//    _wgetcwd(pathToFile, FILENAME_MAX);
-  //  wcscat_s(pathToFile, 0, L"\\recipes\\*.recipe");
+    wchar_t* pathToFile;
+    pathToFile = _wgetcwd(NULL, FILENAME_MAX*sizeof(wchar_t));
+    wchar_t* endPtr = pathToFile + wcsnlen_s(pathToFile, FILENAME_MAX);
+    wcscpy_s(endPtr, wcsnlen_s(L"\\recipes\\*.recipe",FILENAME_MAX)*sizeof(wchar_t), L"\\recipes\\*.recipe");
+    printf("Hello");
     entry = FindFirstFileW(pathToFile, &FindFileData);
-    while( entry != INVALID_HANDLE_VALUE  )
+    while( entry != INVALID_HANDLE_VALUE  && entry != NULL)
     {
         
         int fileNameLength = 9 + wcslen(FindFileData.cFileName);
@@ -129,7 +129,7 @@ Recipe* importRecipes(){
         }
         entry = FindNextFile(entry, &FindFileData);
     }
-    FindClose(entry);
+    //FindClose(entry);
 
     return recipes;
 }
